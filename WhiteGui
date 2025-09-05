@@ -1,0 +1,133 @@
+--// White Library
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local WhiteLib = {}
+
+function WhiteLib:CreateWindow(titleText)
+    local WhiteGui = Instance.new("ScreenGui")
+    WhiteGui.Name = "White"
+    WhiteGui.ResetOnSpawn = false
+    WhiteGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 400, 0, 300)
+    MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    MainFrame.Parent = WhiteGui
+
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, 0, 0, 30)
+    Title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Title.Text = titleText or "White GUI"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.Font = Enum.Font.SourceSansBold
+    Title.TextSize = 18
+    Title.Parent = MainFrame
+
+    local TabsFrame = Instance.new("Frame")
+    TabsFrame.Size = UDim2.new(0, 100, 1, -30)
+    TabsFrame.Position = UDim2.new(0, 0, 0, 30)
+    TabsFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    TabsFrame.Parent = MainFrame
+
+    local UIListLayout = Instance.new("UIListLayout")
+    UIListLayout.Parent = TabsFrame
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Size = UDim2.new(1, -100, 1, -30)
+    ContentFrame.Position = UDim2.new(0, 100, 0, 30)
+    ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    ContentFrame.Parent = MainFrame
+
+    local Window = {}
+    function Window:CreateTab(tabName)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+        btn.Text = tabName
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.SourceSansBold
+        btn.TextSize = 16
+        btn.Parent = TabsFrame
+
+        local tabFrame = Instance.new("Frame")  
+        tabFrame.Size = UDim2.new(1, 0, 1, 0)  
+        tabFrame.BackgroundTransparency = 1  
+        tabFrame.Visible = false  
+        tabFrame.Parent = ContentFrame  
+
+        btn.MouseButton1Click:Connect(function()
+            for _, f in ipairs(ContentFrame:GetChildren()) do
+                if f:IsA("Frame") then f.Visible = false end
+            end
+            tabFrame.Visible = true
+        end)
+
+        local Tab = {}
+        function Tab:CreateSection(secName)
+            local SecFrame = Instance.new("Frame")
+            SecFrame.Size = UDim2.new(1, 0, 0, 30)
+            SecFrame.BackgroundTransparency = 1
+            SecFrame.Parent = tabFrame
+
+            local SecLabel = Instance.new("TextLabel")
+            SecLabel.Size = UDim2.new(1, 0, 0, 20)
+            SecLabel.Text = secName
+            SecLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            SecLabel.Font = Enum.Font.SourceSansBold
+            SecLabel.TextSize = 14
+            SecLabel.TextXAlignment = Enum.TextXAlignment.Left
+            SecLabel.BackgroundTransparency = 1
+            SecLabel.Parent = SecFrame
+
+            local Section = {}
+            function Section:CreateButton(text, callback)
+                local btn = Instance.new("TextButton")
+                btn.Size = UDim2.new(0.9, 0, 0, 30)
+                btn.Position = UDim2.new(0.05, 0, 0, 25)
+                btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+                btn.Text = text
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                btn.Font = Enum.Font.SourceSans
+                btn.TextSize = 16
+                btn.Parent = SecFrame
+
+                btn.MouseButton1Click:Connect(function()
+                    if callback then callback() end
+                end)
+            end
+
+            function Section:CreateToggle(text, default, callback)
+                local btn = Instance.new("TextButton")
+                btn.Size = UDim2.new(0.9, 0, 0, 30)
+                btn.Position = UDim2.new(0.05, 0, 0, 60)
+                btn.BackgroundColor3 = default and Color3.fromRGB(50,180,50) or Color3.fromRGB(180,50,50)
+                btn.Text = text .. " [" .. (default and "ON" or "OFF") .. "]"
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                btn.Font = Enum.Font.SourceSans
+                btn.TextSize = 16
+                btn.Parent = SecFrame
+
+                local state = default
+                btn.MouseButton1Click:Connect(function()
+                    state = not state
+                    btn.BackgroundColor3 = state and Color3.fromRGB(50,180,50) or Color3.fromRGB(180,50,50)
+                    btn.Text = text .. " [" .. (state and "ON" or "OFF") .. "]"
+                    if callback then callback(state) end
+                end)
+            end
+
+            return Section
+        end
+
+        return Tab
+    end
+
+    return Window
+end
+
+return WhiteLib
