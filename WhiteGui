@@ -1,14 +1,34 @@
---// White Library
+--// White Library mit Open/Close Button
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local WhiteLib = {}
 
 function WhiteLib:CreateWindow(titleText)
+    -- GUI Toggle Button (immer sichtbar)
+    local WhiteToggleGui = Instance.new("ScreenGui")
+    WhiteToggleGui.Name = "WhiteToggle"
+    WhiteToggleGui.ResetOnSpawn = false
+    WhiteToggleGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+    local OpenButton = Instance.new("TextButton")
+    OpenButton.Size = UDim2.new(0, 80, 0, 30)
+    OpenButton.Position = UDim2.new(0, 10, 0.5, -15)
+    OpenButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    OpenButton.Text = "White"
+    OpenButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    OpenButton.Font = Enum.Font.SourceSansBold
+    OpenButton.TextSize = 18
+    OpenButton.Parent = WhiteToggleGui
+    OpenButton.Active = true
+    OpenButton.Draggable = true
+
+    -- Haupt GUI
     local WhiteGui = Instance.new("ScreenGui")
     WhiteGui.Name = "White"
     WhiteGui.ResetOnSpawn = false
     WhiteGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    WhiteGui.Enabled = false
 
     local MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.new(0, 400, 0, 300)
@@ -43,6 +63,12 @@ function WhiteLib:CreateWindow(titleText)
     ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     ContentFrame.Parent = MainFrame
 
+    -- Open/Close Logik
+    OpenButton.MouseButton1Click:Connect(function()
+        WhiteGui.Enabled = not WhiteGui.Enabled
+    end)
+
+    -- API
     local Window = {}
     function Window:CreateTab(tabName)
         local btn = Instance.new("TextButton")
@@ -54,11 +80,11 @@ function WhiteLib:CreateWindow(titleText)
         btn.TextSize = 16
         btn.Parent = TabsFrame
 
-        local tabFrame = Instance.new("Frame")  
-        tabFrame.Size = UDim2.new(1, 0, 1, 0)  
-        tabFrame.BackgroundTransparency = 1  
-        tabFrame.Visible = false  
-        tabFrame.Parent = ContentFrame  
+        local tabFrame = Instance.new("Frame")
+        tabFrame.Size = UDim2.new(1, 0, 1, 0)
+        tabFrame.BackgroundTransparency = 1
+        tabFrame.Visible = false
+        tabFrame.Parent = ContentFrame
 
         btn.MouseButton1Click:Connect(function()
             for _, f in ipairs(ContentFrame:GetChildren()) do
