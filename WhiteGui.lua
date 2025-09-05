@@ -1,4 +1,3 @@
---// White Library v2 – komplett überarbeitet mit Scroll & Padding
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
@@ -24,7 +23,7 @@ function WhiteLib:CreateWindow(titleText)
     OpenButton.Active = true
     OpenButton.Draggable = true
 
-    -- Haupt GUI
+    -- Main GUI
     local WhiteGui = Instance.new("ScreenGui")
     WhiteGui.Name = "White"
     WhiteGui.ResetOnSpawn = false
@@ -65,7 +64,7 @@ function WhiteLib:CreateWindow(titleText)
     ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     ContentFrame.Parent = MainFrame
 
-    -- Toggle Open/Close
+    -- Open/Close
     OpenButton.MouseButton1Click:Connect(function()
         WhiteGui.Enabled = not WhiteGui.Enabled
     end)
