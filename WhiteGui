@@ -1,11 +1,9 @@
---// White Library mit Open/Close Button
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local WhiteLib = {}
 
 function WhiteLib:CreateWindow(titleText)
-    -- GUI Toggle Button (immer sichtbar)
     local WhiteToggleGui = Instance.new("ScreenGui")
     WhiteToggleGui.Name = "WhiteToggle"
     WhiteToggleGui.ResetOnSpawn = false
@@ -23,7 +21,6 @@ function WhiteLib:CreateWindow(titleText)
     OpenButton.Active = true
     OpenButton.Draggable = true
 
-    -- Haupt GUI
     local WhiteGui = Instance.new("ScreenGui")
     WhiteGui.Name = "White"
     WhiteGui.ResetOnSpawn = false
@@ -63,12 +60,10 @@ function WhiteLib:CreateWindow(titleText)
     ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     ContentFrame.Parent = MainFrame
 
-    -- Open/Close Logik
     OpenButton.MouseButton1Click:Connect(function()
         WhiteGui.Enabled = not WhiteGui.Enabled
     end)
 
-    -- API
     local Window = {}
     function Window:CreateTab(tabName)
         local btn = Instance.new("TextButton")
