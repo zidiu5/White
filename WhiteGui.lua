@@ -94,6 +94,13 @@ function WhiteLib:CreateWindow(titleText)
         UIList.SortOrder = Enum.SortOrder.LayoutOrder
         UIList.Padding = UDim.new(0,5)
 
+        local function updateCanvas()
+            tabFrame.CanvasSize = UDim2.new(0, 0, 0, UIList.AbsoluteContentSize.Y + 10)
+        end
+
+        UIList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateCanvas)
+        updateCanvas()
+        
         btn.MouseButton1Click:Connect(function()
             for _, f in ipairs(ContentFrame:GetChildren()) do
                 if f:IsA("ScrollingFrame") then f.Visible = false end
@@ -129,7 +136,8 @@ function WhiteLib:CreateWindow(titleText)
             -- Label
             function Section:CreateLabel(text)
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(0.95,0,0,25)
+                lbl.Size = UDim2.new(1, -20, 0, 30)
+                lbl.Position = UDim2.new(0, 10, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = text
                 lbl.TextColor3 = Color3.fromRGB(255,255,255)
@@ -142,7 +150,8 @@ function WhiteLib:CreateWindow(titleText)
             -- Button
             function Section:CreateButton(text, callback)
                 local btn = Instance.new("TextButton")
-                btn.Size = UDim2.new(0.95,0,0,30)
+                btn.Size = UDim2.new(1, -20, 0, 30)
+                btn.Position = UDim2.new(0, 10, 0, 0)
                 btn.BackgroundColor3 = Color3.fromRGB(80,80,80)
                 btn.Text = text
                 btn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -158,7 +167,8 @@ function WhiteLib:CreateWindow(titleText)
             function Section:CreateToggle(text, default, callback)
                 local state = default
                 local btn = Instance.new("TextButton")
-                btn.Size = UDim2.new(0.95,0,0,30)
+                btn.Size = UDim2.new(1, -20, 0, 30)
+                btn.Position = UDim2.new(0, 10, 0, 0)
                 btn.BackgroundColor3 = state and Color3.fromRGB(50,180,50) or Color3.fromRGB(180,50,50)
                 btn.Text = text.." ["..(state and "ON" or "OFF").."]"
                 btn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -176,7 +186,8 @@ function WhiteLib:CreateWindow(titleText)
             -- Textbox
             function Section:CreateTextbox(text, placeholder, callback)
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(0.95,0,0,20)
+                lbl.Size = UDim2.new(1, -20, 0, 30)
+                lbl.Position = UDim2.new(0, 10, 0, 0)
                 lbl.Text = text
                 lbl.TextColor3 = Color3.fromRGB(200,200,200)
                 lbl.Font = Enum.Font.SourceSans
@@ -186,7 +197,8 @@ function WhiteLib:CreateWindow(titleText)
                 lbl.Parent = SecFrame
 
                 local box = Instance.new("TextBox")
-                box.Size = UDim2.new(0.95,0,0,30)
+                box.Size = UDim2.new(1, -20, 0, 30)
+                box.Position = UDim2.new(0, 10, 0, 0)
                 box.BackgroundColor3 = Color3.fromRGB(80,80,80)
                 box.PlaceholderText = placeholder or ""
                 box.TextColor3 = Color3.fromRGB(255,255,255)
@@ -203,7 +215,8 @@ function WhiteLib:CreateWindow(titleText)
             -- Dropdown
             function Section:CreateDropdown(text, options, callback)
                 local DropBtn = Instance.new("TextButton")
-                DropBtn.Size = UDim2.new(0.95,0,0,30)
+                DropBtn.Size = UDim2.new(1, -20, 0, 30)
+                DropBtn.Position = UDim2.new(0, 10, 0, 0)
                 DropBtn.BackgroundColor3 = Color3.fromRGB(80,80,120)
                 DropBtn.Text = text.." ▼"
                 DropBtn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -212,7 +225,8 @@ function WhiteLib:CreateWindow(titleText)
                 DropBtn.Parent = SecFrame
 
                 local DropFrame = Instance.new("Frame")
-                DropFrame.Size = UDim2.new(0.95,0,0,#options*25)
+                DropFrame.Size = UDim2.new(1, -20, 0, 30)
+                DropFrame.Position = UDim2.new(0, 10, 0, 0)
                 DropFrame.BackgroundColor3 = Color3.fromRGB(60,60,80)
                 DropFrame.Visible = false
                 DropFrame.ClipsDescendants = false
@@ -226,7 +240,8 @@ function WhiteLib:CreateWindow(titleText)
 
                 for _, opt in ipairs(options) do
                     local OptBtn = Instance.new("TextButton")
-                    OptBtn.Size = UDim2.new(1,0,0,25)
+                    OptBtn.Size = UDim2.new(1, -20, 0, 30)
+                    OptBtn.Position = UDim2.new(0, 10, 0, 0)
                     OptBtn.BackgroundColor3 = Color3.fromRGB(90,90,130)
                     OptBtn.Text = opt
                     OptBtn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -250,7 +265,8 @@ function WhiteLib:CreateWindow(titleText)
             -- Keybind
             function Section:CreateKeybind(text, defaultKey, callback)
                 local KeyBtn = Instance.new("TextButton")
-                KeyBtn.Size = UDim2.new(0.95,0,0,30)
+                KeyBtn.Size = UDim2.new(1, -20, 0, 30)
+                KeyBtn.Position = UDim2.new(0, 10, 0, 0)
                 KeyBtn.BackgroundColor3 = Color3.fromRGB(100,80,80)
                 KeyBtn.Text = text..": ["..(defaultKey.Name or "None").."]"
                 KeyBtn.TextColor3 = Color3.fromRGB(255,255,255)
