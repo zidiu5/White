@@ -1,3 +1,4 @@
+--// White Library v2 – komplett überarbeitet
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
@@ -23,7 +24,7 @@ function WhiteLib:CreateWindow(titleText)
     OpenButton.Active = true
     OpenButton.Draggable = true
 
-    -- Main GUI
+    -- Haupt GUI
     local WhiteGui = Instance.new("ScreenGui")
     WhiteGui.Name = "White"
     WhiteGui.ResetOnSpawn = false
@@ -107,7 +108,7 @@ function WhiteLib:CreateWindow(titleText)
             end
             tabFrame.Visible = true
         end)
-
+        
         local Tab = {}
         function Tab:CreateSection(secName)
             local SecFrame = Instance.new("Frame")
@@ -136,7 +137,7 @@ function WhiteLib:CreateWindow(titleText)
             -- Label
             function Section:CreateLabel(text)
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -20, 0, 30)
+                lbl.Size = UDim2.new(1, -20, 0, 25)
                 lbl.Position = UDim2.new(0, 10, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = text
@@ -151,7 +152,7 @@ function WhiteLib:CreateWindow(titleText)
             function Section:CreateButton(text, callback)
                 local btn = Instance.new("TextButton")
                 btn.Size = UDim2.new(1, -20, 0, 30)
-                btn.Position = UDim2.new(0, 10, 0, 0)
+                btn.Position = UDim2.new(0, 10, 0, 0)  
                 btn.BackgroundColor3 = Color3.fromRGB(80,80,80)
                 btn.Text = text
                 btn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -186,7 +187,7 @@ function WhiteLib:CreateWindow(titleText)
             -- Textbox
             function Section:CreateTextbox(text, placeholder, callback)
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -20, 0, 30)
+                lbl.Size = UDim2.new(1, -20, 0, 25)
                 lbl.Position = UDim2.new(0, 10, 0, 0)
                 lbl.Text = text
                 lbl.TextColor3 = Color3.fromRGB(200,200,200)
@@ -225,7 +226,7 @@ function WhiteLib:CreateWindow(titleText)
                 DropBtn.Parent = SecFrame
 
                 local DropFrame = Instance.new("Frame")
-                DropFrame.Size = UDim2.new(1, -20, 0, 30)
+                DropFrame.Size = UDim2.new(1, -20, 0, #options*25)
                 DropFrame.Position = UDim2.new(0, 10, 0, 0)
                 DropFrame.BackgroundColor3 = Color3.fromRGB(60,60,80)
                 DropFrame.Visible = false
@@ -240,8 +241,7 @@ function WhiteLib:CreateWindow(titleText)
 
                 for _, opt in ipairs(options) do
                     local OptBtn = Instance.new("TextButton")
-                    OptBtn.Size = UDim2.new(1, -20, 0, 30)
-                    OptBtn.Position = UDim2.new(0, 10, 0, 0)
+                    OptBtn.Size = UDim2.new(1,0,0,25)
                     OptBtn.BackgroundColor3 = Color3.fromRGB(90,90,130)
                     OptBtn.Text = opt
                     OptBtn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -276,6 +276,7 @@ function WhiteLib:CreateWindow(titleText)
 
                 local currentKey = defaultKey or Enum.KeyCode.None
 
+                -- Taste ändern
                 KeyBtn.MouseButton1Click:Connect(function()
                     KeyBtn.Text = text..": [Press a Key]"
                     local conn
@@ -288,6 +289,7 @@ function WhiteLib:CreateWindow(titleText)
                     end)
                 end)
 
+                -- Aktion beim Drücken
                 UserInputService.InputBegan:Connect(function(input, gp)
                     if not gp and input.KeyCode == currentKey then
                         if callback then callback() end
