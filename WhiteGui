@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
 local WhiteLib = {}
@@ -91,7 +92,7 @@ function WhiteLib:CreateWindow(titleText)
         local Tab = {}
         function Tab:CreateSection(secName)
             local SecFrame = Instance.new("Frame")
-            SecFrame.Size = UDim2.new(1, 0, 0, 30)
+            SecFrame.Size = UDim2.new(1, 0, 0, 200)
             SecFrame.BackgroundTransparency = 1
             SecFrame.Parent = tabFrame
 
@@ -106,10 +107,23 @@ function WhiteLib:CreateWindow(titleText)
             SecLabel.Parent = SecFrame
 
             local Section = {}
+            function Section:CreateLabel(text)
+                local lbl = Instance.new("TextLabel")
+                lbl.Size = UDim2.new(0.9, 0, 0, 25)
+                lbl.Position = UDim2.new(0.05, 0, 0, 25)
+                lbl.BackgroundTransparency = 1
+                lbl.Text = text
+                lbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+                lbl.Font = Enum.Font.SourceSans
+                lbl.TextSize = 16
+                lbl.TextXAlignment = Enum.TextXAlignment.Left
+                lbl.Parent = SecFrame
+            end
+
             function Section:CreateButton(text, callback)
                 local btn = Instance.new("TextButton")
                 btn.Size = UDim2.new(0.9, 0, 0, 30)
-                btn.Position = UDim2.new(0.05, 0, 0, 25)
+                btn.Position = UDim2.new(0.05, 0, 0, 55)
                 btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
                 btn.Text = text
                 btn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -125,7 +139,7 @@ function WhiteLib:CreateWindow(titleText)
             function Section:CreateToggle(text, default, callback)
                 local btn = Instance.new("TextButton")
                 btn.Size = UDim2.new(0.9, 0, 0, 30)
-                btn.Position = UDim2.new(0.05, 0, 0, 60)
+                btn.Position = UDim2.new(0.05, 0, 0, 90)
                 btn.BackgroundColor3 = default and Color3.fromRGB(50,180,50) or Color3.fromRGB(180,50,50)
                 btn.Text = text .. " [" .. (default and "ON" or "OFF") .. "]"
                 btn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -139,6 +153,113 @@ function WhiteLib:CreateWindow(titleText)
                     btn.BackgroundColor3 = state and Color3.fromRGB(50,180,50) or Color3.fromRGB(180,50,50)
                     btn.Text = text .. " [" .. (state and "ON" or "OFF") .. "]"
                     if callback then callback(state) end
+                end)
+            end
+
+            function Section:CreateTextbox(text, placeholder, callback)
+                local lbl = Instance.new("TextLabel")
+                lbl.Size = UDim2.new(0.9, 0, 0, 20)
+                lbl.Position = UDim2.new(0.05, 0, 0, 130)
+                lbl.Text = text
+                lbl.TextColor3 = Color3.fromRGB(200, 200, 200)
+                lbl.Font = Enum.Font.SourceSans
+                lbl.TextSize = 14
+                lbl.TextXAlignment = Enum.TextXAlignment.Left
+                lbl.BackgroundTransparency = 1
+                lbl.Parent = SecFrame
+
+                local box = Instance.new("TextBox")
+                box.Size = UDim2.new(0.9, 0, 0, 30)
+                box.Position = UDim2.new(0.05, 0, 0, 155)
+                box.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+                box.PlaceholderText = placeholder or ""
+                box.TextColor3 = Color3.fromRGB(255, 255, 255)
+                box.Font = Enum.Font.SourceSans
+                box.TextSize = 16
+                box.ClearTextOnFocus = false
+                box.Parent = SecFrame
+
+                box.FocusLost:Connect(function(enter)
+                    if enter and callback then
+                        callback(box.Text)
+                    end
+                end)
+            end
+
+            function Section:CreateDropdown(text, options, callback)
+                local DropBtn = Instance.new("TextButton")
+                DropBtn.Size = UDim2.new(0.9, 0, 0, 30)
+                DropBtn.Position = UDim2.new(0.05, 0, 0, 195)
+                DropBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 120)
+                DropBtn.Text = text .. " ▼"
+                DropBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                DropBtn.Font = Enum.Font.SourceSans
+                DropBtn.TextSize = 16
+                DropBtn.Parent = SecFrame
+
+                local DropFrame = Instance.new("Frame")
+                DropFrame.Size = UDim2.new(0.9, 0, 0, #options * 25)
+                DropFrame.Position = UDim2.new(0.05, 0, 0, 230)
+                DropFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+                DropFrame.Visible = false
+                DropFrame.Parent = SecFrame
+
+                local UIList = Instance.new("UIListLayout")
+                UIList.Parent = DropFrame
+                UIList.SortOrder = Enum.SortOrder.LayoutOrder
+                UIList.Padding = UDim.new(0, 2)
+
+                for _, opt in ipairs(options) do
+                    local OptBtn = Instance.new("TextButton")
+                    OptBtn.Size = UDim2.new(1, 0, 0, 25)
+                    OptBtn.BackgroundColor3 = Color3.fromRGB(90, 90, 130)
+                    OptBtn.Text = opt
+                    OptBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    OptBtn.Font = Enum.Font.SourceSans
+                    OptBtn.TextSize = 14
+                    OptBtn.Parent = DropFrame
+
+                    OptBtn.MouseButton1Click:Connect(function()
+                        DropBtn.Text = text .. ": " .. opt
+                        DropFrame.Visible = false
+                        if callback then callback(opt) end
+                    end)
+                end
+
+                DropBtn.MouseButton1Click:Connect(function()
+                    DropFrame.Visible = not DropFrame.Visible
+                end)
+            end
+
+            function Section:CreateKeybind(text, defaultKey, callback)
+                local btn = Instance.new("TextButton")
+                btn.Size = UDim2.new(0.9, 0, 0, 30)
+                btn.Position = UDim2.new(0.05, 0, 0, 270)
+                btn.BackgroundColor3 = Color3.fromRGB(100, 80, 80)
+                btn.Text = text .. ": [" .. (defaultKey.Name or "None") .. "]"
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                btn.Font = Enum.Font.SourceSans
+                btn.TextSize = 16
+                btn.Parent = SecFrame
+
+                local currentKey = defaultKey or Enum.KeyCode.None
+
+                btn.MouseButton1Click:Connect(function()
+                    btn.Text = text .. ": [Press a Key]"
+                    local conn
+                    conn = UserInputService.InputBegan:Connect(function(input, gp)
+                        if not gp and input.UserInputType == Enum.UserInputType.Keyboard then
+                            currentKey = input.KeyCode
+                            btn.Text = text .. ": [" .. currentKey.Name .. "]"
+                            conn:Disconnect()
+                        end
+                    end)
+                end)
+
+                UserInputService.InputBegan:Connect(function(input, gp)
+                    if not gp and input.KeyCode == currentKey then
+                        if callback then callback() end
+                    end
                 end)
             end
 
